@@ -1,103 +1,307 @@
+"use client";
+import { useState } from "react";
+import { Facebook, Instagram, Twitter } from "lucide-react";
 import Image from "next/image";
 
-export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+type SocialMedia = {
+  name: string;
+  url: string;
+  icon: React.ElementType;
+};
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+const products = [
+  {
+    name: "Strawberry Delight",
+    price: "$5.99",
+    image: "/imagen1.jpg",
+  },
+  {
+    name: "Blueberry Bliss",
+    price: "$6.49",
+    image: "/imagen2.jpg",
+  },
+  {
+    name: "Fresa Magic",
+    price: "$5.49",
+    image: "/imagen3.jpg",
+  },
+];
+
+const socialMedia: SocialMedia[] = [
+  { name: "Instagram", url: "https://instagram.com", icon: Instagram },
+  { name: "Facebook", url: "https://facebook.com", icon: Facebook },
+  { name: "Twitter", url: "https://twitter.com", icon: Twitter },
+];
+
+export default function Home() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedSocial, setSelectedSocial] = useState<SocialMedia | null>(
+    null
+  );
+
+  const handleIconClick = (media: SocialMedia) => {
+    setSelectedSocial(media);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelectedSocial(null);
+  };
+
+  const handleCopyLink = () => {
+    if (selectedSocial) {
+      navigator.clipboard.writeText(selectedSocial.url);
+    }
+  };
+
+  return (
+    <main
+      style={{
+        fontFamily: "sans-serif",
+        background: "#fff0f6",
+        minHeight: "100vh",
+        padding: "0 0 40px 0",
+      }}
+    >
+      {/* Hero Section */}
+      <section
+        style={{
+          textAlign: "center",
+          padding: "60px 20px 30px 20px",
+          background: "#ffb3de",
+        }}
+      >
+        <h1 style={{ fontSize: "3rem", margin: 0 }}>Creamberry</h1>
+        <p style={{ fontSize: "1.3rem", margin: "10px 0 0 0" }}>
+          Sweeten your day with our delicious treats!
+        </p>
+      </section>
+
+      {/* Product List */}
+      <section
+        style={{ maxWidth: 900, margin: "40px auto 0 auto", padding: "0 20px" }}
+      >
+        <h2 style={{ textAlign: "center", color: "#d72660" }}>Our Products</h2>
+        <div
+          style={{
+            display: "flex",
+            gap: 30,
+            justifyContent: "center",
+            flexWrap: "wrap",
+            marginTop: 20,
+          }}
+        >
+          {products.map((product) => (
+            <div
+              key={product.name}
+              style={{
+                background: "#fff",
+                borderRadius: 12,
+                boxShadow: "0 2px 8px #eee",
+                padding: 20,
+                width: 220,
+                textAlign: "center",
+              }}
+            >
+              <Image
+                src={product.image}
+                alt={product.name}
+                width={100}
+                height={100}
+                style={{ borderRadius: 8 }}
+              />
+              <h3 style={{ margin: "15px 0 5px 0", color: "#d72660" }}>
+                {product.name}
+              </h3>
+              <p style={{ fontWeight: "bold", color: "#333" }}>
+                {product.price}
+              </p>
+              <button
+                style={{
+                  background: "#d72660",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: 6,
+                  padding: "8px 18px",
+                  cursor: "pointer",
+                  marginTop: 10,
+                }}
+              >
+                Comprar ahora
+              </button>
+            </div>
+          ))}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      </section>
+
+      {/* Social Media */}
+      <section style={{ textAlign: "center", margin: "50px 0 0 0" }}>
+        <h2 style={{ color: "#d72660" }}>Follow Us</h2>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: 30,
+            marginTop: 15,
+          }}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          {socialMedia.map((media) => {
+            const Icon = media.icon;
+            return (
+              <button
+                key={media.name}
+                onClick={() => handleIconClick(media)}
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  display: "inline-block",
+                  padding: 0,
+                }}
+                aria-label={media.name}
+              >
+                <Icon size={40} />
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Modal */}
+      {modalOpen && selectedSocial && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0,0,0,0.3)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+          }}
+          onClick={handleCloseModal}
         >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          <div
+            style={{
+              background: "#fff",
+              borderRadius: 12,
+              padding: 32,
+              minWidth: 300,
+              boxShadow: "0 2px 16px #0002",
+              position: "relative",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 style={{ marginTop: 0, color: "#d72660", textAlign: "center" }}>
+              {selectedSocial.name}
+            </h3>
+            <ul style={{ listStyle: "none", padding: 0, margin: "20px 0" }}>
+              <li>
+                <a
+                  href={selectedSocial.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    color: "#d72660",
+                    textDecoration: "none",
+                    fontWeight: "bold",
+                    display: "block",
+                    padding: "8px 0",
+                  }}
+                >
+                  Visitar perfil
+                </a>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    navigator.share
+                      ? navigator.share({ url: selectedSocial.url })
+                      : window.open(selectedSocial.url, "_blank");
+                  }}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "#d72660",
+                    fontWeight: "bold",
+                    cursor: "pointer",
+                    padding: "8px 0",
+                    width: "100%",
+                    textAlign: "left",
+                  }}
+                >
+                  Compartir
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={handleCopyLink}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "#d72660",
+                    fontWeight: "bold",
+                    cursor: "pointer",
+                    padding: "8px 0",
+                    width: "100%",
+                    textAlign: "left",
+                  }}
+                >
+                  Copiar enlace
+                </button>
+              </li>
+            </ul>
+            <button
+              onClick={handleCloseModal}
+              style={{
+                position: "absolute",
+                top: 10,
+                right: 16,
+                background: "none",
+                border: "none",
+                fontSize: 22,
+                color: "#888",
+                cursor: "pointer",
+              }}
+              aria-label="Cerrar modal"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* About Us */}
+      <section
+        style={{
+          maxWidth: 700,
+          margin: "60px auto 0 auto",
+          background: "#fff",
+          borderRadius: 12,
+          boxShadow: "0 2px 8px #eee",
+          padding: 30,
+        }}
+      >
+        <h2 style={{ color: "#d72660", textAlign: "center" }}>Nosotros</h2>
+        <p
+          style={{
+            color: "#444",
+            fontSize: "1.1rem",
+            textAlign: "center",
+            marginTop: 15,
+          }}
         >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+          En Creamberry nos dedicamos a ofrecerte los postres y dulces más
+          frescos y deliciosos. Nuestra pasión por la calidad y el sabor es la
+          esencia de todo lo que hacemos. Ya sea que estés celebrando una
+          ocasión especial o simplemente quieras darte un gusto, ¡Cremaberry
+          está aquí para hacerte el día más dulce!
+        </p>
+      </section>
+    </main>
   );
 }
