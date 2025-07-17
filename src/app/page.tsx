@@ -14,16 +14,19 @@ const products = [
     name: "Strawberry Delight",
     price: "$5.99",
     image: "/imagen1.jpg",
+    description: "Un delicioso dulce de fresa con un toque cremoso.",
   },
   {
     name: "Blueberry Bliss",
     price: "$6.49",
     image: "/imagen2.jpg",
+    description: "Arándanos y fresa en perfecta armonía.",
   },
   {
     name: "Fresa Magic",
     price: "$5.49",
     image: "/imagen3.jpg",
+    description: "Sabor a Fresa tropical en cada bocado.",
   },
 ];
 
@@ -38,6 +41,10 @@ export default function Home() {
   const [selectedSocial, setSelectedSocial] = useState<SocialMedia | null>(
     null
   );
+  const [productModalOpen, setProductModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<
+    (typeof products)[0] | null
+  >(null);
 
   const handleIconClick = (media: SocialMedia) => {
     setSelectedSocial(media);
@@ -53,6 +60,16 @@ export default function Home() {
     if (selectedSocial) {
       navigator.clipboard.writeText(selectedSocial.url);
     }
+  };
+
+  const handleBuyNowClick = (product: (typeof products)[0]) => {
+    setSelectedProduct(product);
+    setProductModalOpen(true);
+  };
+
+  const handleCloseProductModal = () => {
+    setProductModalOpen(false);
+    setSelectedProduct(null);
   };
 
   return (
@@ -74,7 +91,7 @@ export default function Home() {
       >
         <h1 style={{ fontSize: "3rem", margin: 0 }}>Creamberry</h1>
         <p style={{ fontSize: "1.3rem", margin: "10px 0 0 0" }}>
-          Sweeten your day with our delicious treats!
+          ¡Endulza tu día con nuestras deliciosas delicias!{" "}
         </p>
       </section>
 
@@ -82,7 +99,7 @@ export default function Home() {
       <section
         style={{ maxWidth: 900, margin: "40px auto 0 auto", padding: "0 20px" }}
       >
-        <h2 style={{ textAlign: "center", color: "#d72660" }}>Our Products</h2>
+        <h2 style={{ textAlign: "center", color: "#d72660" }}>Nuestros productos</h2>
         <div
           style={{
             display: "flex",
@@ -127,8 +144,9 @@ export default function Home() {
                   cursor: "pointer",
                   marginTop: 10,
                 }}
+                onClick={() => handleBuyNowClick(product)}
               >
-                Comprar ahora
+                Ver detalles
               </button>
             </div>
           ))}
@@ -270,6 +288,69 @@ export default function Home() {
               aria-label="Cerrar modal"
             >
               ×
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Product Details Modal */}
+      {productModalOpen && selectedProduct && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0,0,0,0.3)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+          }}
+          onClick={handleCloseProductModal}
+        >
+          <div
+            style={{
+              background: "#fff",
+              borderRadius: 12,
+              padding: 32,
+              minWidth: 320,
+              boxShadow: "0 2px 16px #0002",
+              position: "relative",
+              textAlign: "center",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Image
+              src={selectedProduct.image}
+              alt={selectedProduct.name}
+              width={120}
+              height={120}
+              style={{ borderRadius: 10 }}
+            />
+            <h3 style={{ color: "#d72660", margin: "18px 0 8px 0" }}>
+              {selectedProduct.name}
+            </h3>
+            <p style={{ fontWeight: "bold", color: "#333", margin: 0 }}>
+              {selectedProduct.price}
+            </p>
+            <p style={{ color: "#555", margin: "16px 0 0 0" }}>
+              {selectedProduct.description}
+            </p>
+            <button
+              onClick={handleCloseProductModal}
+              style={{
+                marginTop: 24,
+                background: "#d72660",
+                color: "#fff",
+                border: "none",
+                borderRadius: 6,
+                padding: "8px 24px",
+                cursor: "pointer",
+              }}
+            >
+              Cerrar
             </button>
           </div>
         </div>
